@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farm Funding Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #667eea;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+        .yellow {
+            background: #ffc107;
+            color: #333;
+        }
+        .yellow:hover {
+            background: #ffb300;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        .results {
+            margin-top: 30px;
+        }
+        .program {
+            background: #f9f9f9;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>🌾 Farm Funding Matcher</h1>
+        <p>Simple test version</p>
+        
+        <div id="form-section">
+            <button class="yellow" onclick="fillExample()">📋 Fill Example Profile</button>
+            
+            <label>Farm Name:</label>
+            <input type="text" id="farmName" placeholder="Enter farm name">
+            
+            <label>Location:</label>
+            <input type="text" id="location" placeholder="e.g., Orangeburg County, SC">
+            
+            <label>Farm Size (acres):</label>
+            <input type="number" id="farmSize" placeholder="250">
+            
+            <label>Years Experience:</label>
+            <input type="number" id="experience" placeholder="6">
+            
+            <br><br>
+            <button onclick="findPrograms()">Find My Funding Programs →</button>
+        </div>
+        
+        <div id="results-section" class="hidden">
+            <h2>Your Matches</h2>
+            <div id="results"></div>
+            <button onclick="goBack()">← Back to Form</button>
+        </div>
+    </div>
+
+    <script>
+        console.log('Script loaded!');
+        
+        function fillExample() {
+            console.log('Fill example clicked');
+            document.getElementById('farmName').value = 'Carter Family Farm';
+            document.getElementById('location').value = 'Orangeburg County, SC';
+            document.getElementById('farmSize').value = '250';
+            document.getElementById('experience').value = '6';
+            alert('Example profile filled! Now click "Find My Funding Programs"');
+        }
+        
+        function findPrograms() {
+            console.log('Find programs clicked');
+            
+            const farmName = document.getElementById('farmName').value;
+            const location = document.getElementById('location').value;
+            const farmSize = document.getElementById('farmSize').value;
+            const experience = document.getElementById('experience').value;
+            
+            if (!farmName || !location || !farmSize || !experience) {
+                alert('Please fill in all fields!');
+                return;
+            }
+            
+            // Show results
+            document.getElementById('form-section').classList.add('hidden');
+            document.getElementById('results-section').classList.remove('hidden');
+            
+            // Display programs
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <div class="program">
+                    <h3>🏆 FSA Microloans for Beginning Farmers</h3>
+                    <p><strong>USDA Farm Service Agency</strong> | Loan | Up to $50,000</p>
+                    <p>Perfect match for ${farmName}! You have ${experience} years experience, which qualifies you as a beginning farmer.</p>
+                    <p><strong>Why this matches:</strong></p>
+                    <ul>
+                        <li>✓ Beginning farmer (${experience} years)</li>
+                        <li>✓ Simplified application</li>
+                        <li>✓ Fast approval (2-3 weeks)</li>
+                        <li>✓ Available in ${location}</li>
+                    </ul>
+                    <a href="https://www.fsa.usda.gov/programs-and-services/farm-loan-programs/microloans/" target="_blank">
+                        <button>Visit Program Website →</button>
+                    </a>
+                </div>
+                
+                <div class="program">
+                    <h3>FSA Direct Operating Loans</h3>
+                    <p><strong>USDA Farm Service Agency</strong> | Loan | Up to $400,000</p>
+                    <p>Annual operating loans for seed, fertilizer, and equipment.</p>
+                    <p><strong>Why this matches:</strong></p>
+                    <ul>
+                        <li>✓ Beginning farmer priority</li>
+                        <li>✓ Low interest rates (3.375%)</li>
+                        <li>✓ Flexible repayment</li>
+                    </ul>
+                    <a href="https://www.fsa.usda.gov/programs-and-services/farm-loan-programs/farm-operating-loans/" target="_blank">
+                        <button>Visit Program Website →</button>
+                    </a>
+                </div>
+                
+                <div class="program">
+                    <h3>EQIP - Environmental Quality Incentives</h3>
+                    <p><strong>USDA NRCS</strong> | Cost-share Grant | Up to $450,000</p>
+                    <p>Covers 50-75% of conservation practice costs including irrigation.</p>
+                    <p><strong>Deadline:</strong> January 15, 2026</p>
+                    <a href="https://www.nrcs.usda.gov/programs-initiatives/eqip-environmental-quality-incentives" target="_blank">
+                        <button>Visit Program Website →</button>
+                    </a>
+                </div>
+            `;
+        }
+        
+        function goBack() {
+            document.getElementById('form-section').classList.remove('hidden');
+            document.getElementById('results-section').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>

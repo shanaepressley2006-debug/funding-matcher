@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Farm Funding Matcher</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+        .checkbox-group input {
+            width: auto;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+            margin-top: 20px;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+            margin-top: 20px;
+        }
+
+        .btn-example {
+            background: #ffc107;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .btn-example:hover {
+            background: #ffb300;
+        }
+
+        .user-info {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .user-info h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .best-pick {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+        }
+
+        .best-pick h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .badge {
+            background: #ffc107;
+            color: #333;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .program-card {
+            background: #f9f9f9;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+        }
+
+        .program-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .match-badge {
+            background: #4caf50;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .meta {
+            color: #666;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .best-pick a {
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌱 Smart Farm Funding Matcher</h1>
+        <p class="subtitle">Intelligent matching algorithm finds your best funding programs</p>
+
+        <!-- PROFILE SECTION -->
+        <div id="profile-section" class="section active">
+            <button class="btn-example" onclick="fillExample()">
+                📋 Use Example Profile (Michael Carter - YBS Farmer)
+            </button>
+
+            <div class="form-group">
+                <label>Farm Name</label>
+                <input type="text" id="farmName" placeholder="Enter your farm name">
+            </div>
+
+            <div class="form-group">
+                <label>Location (State)</label>
+                <select id="state">
+                    <option value="">Select State</option>
+                    <option value="SC">South Carolina</option>
+                    <option value="NC">North Carolina</option>
+                    <option value="GA">Georgia</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Total Farm Size (acres)</label>
+                <input type="number" id="acres" placeholder="250">
+            </div>
+
+            <div class="form-group">
+                <label>Years of Farming Experience</label>
+                <input type="number" id="experience" placeholder="6">
+            </div>
+
+            <div class="form-group">
+                <label>Farmer Status (select all that apply)</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" id="young"> Young Farmer (under 35)</label>
+                    <label><input type="checkbox" id="beginning"> Beginning Farmer (≤10 years)</label>
+                    <label><input type="checkbox" id="small"> Small Farmer (YBS)</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Funding Needs (select all that apply)</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" id="equipment"> Equipment & Machinery</label>
+                    <label><input type="checkbox" id="operating"> Operating Costs (seed, fertilizer)</label>
+                    <label><input type="checkbox" id="land"> Land Purchase/Lease</label>
+                    <label><input type="checkbox" id="irrigation"> Irrigation Systems</label>
+                    <label><input type="checkbox" id="conservation"> Conservation Practices</label>
+                </div>
+            </div>
+
+            <button class="btn-primary" onclick="findMatches()">
+                🔍 Find My Best Funding Programs
+            </button>
+        </div>
+
+        <!-- RESULTS SECTION -->
+        <div id="results-section" class="section">
+            <div class="user-info">
+                <h3 id="welcomeText"></h3>
+                <p id="profileSummary"></p>
+            </div>
+
+            <h2 style="margin-bottom: 20px;">Your Matching Programs</h2>
+            <div id="results"></div>
+
+            <button class="btn-secondary" onclick="goBack()">← Edit Profile</button>
+        </div>
+    </div>
+
+    <script>
+        // FUNDING PROGRAMS DATABASE
+        const programs = [
+            {
+                id: 1,
+                name: "FSA Microloans for Beginning Farmers",
+                agency: "USDA Farm Service Agency",
+                maxAmount: "$50,000",
+                type: "Loan",
+                interestRate: "3.375%",
+                minExp: 0, maxExp: 10,
+                minAcres: 0, maxAcres: 300,
+                states: ["SC", "NC", "GA"],
+                farmerTypes: ["beginning", "young", "small"],
+                purposes: ["equipment", "operating", "infrastructure"],
+                deadline: "Year-round",
+                appTime: "2-3 weeks",
+                benefits: [
+                    "Simplified application - minimal paperwork",
+                    "Fast approval (2-3 weeks)",
+                    "Low interest rate: 3.375%",
+                    "Perfect for farmers with off-farm employment"
+                ],
+                url: "https://www.fsa.usda.gov/programs-and-services/farm-loan-programs/microloans/"
+            },
+            {
+                id: 2,
+                name: "FSA Direct Operating Loans",
+                agency: "USDA Farm Service Agency",
+                maxAmount: "$400,000",
+                type: "Loan",
+                interestRate: "3.375%",
+                minExp: 0, maxExp: 10,
+                minAcres: 0, maxAcres: 1000,
+                states: ["SC", "NC", "GA"],
+                farmerTypes: ["beginning", "young", "small"],
+                purposes: ["operating", "equipment", "livestock"],
+                deadline: "Year-round",
+                appTime: "30-45 days",
+                benefits: [
+                    "Low interest rate: 3.375%",
+                    "Flexible repayment based on harvest",
+                    "Beginning farmer priority",
+                    "Can refinance existing debt"
+                ],
+                url: "https://www.fsa.usda.gov/programs-and-services/farm-loan-programs/farm-operating-loans/"
+            },
+            {
+                id: 3,
+                name: "FSA Direct Farm Ownership Loans",
+                agency: "USDA Farm Service Agency",
+                maxAmount: "$600,000",
+                type: "Loan",
+                interestRate: "4.125%",
+                minExp: 0, maxExp: 10,
+                minAcres: 0, maxAcres: 2000,
+                states: ["SC", "NC", "GA"],
+                farmerTypes: ["beginning", "young", "small"],
+                purposes: ["land", "equipment", "infrastructure"],
+                deadline: "Year-round",
+                appTime: "30-60 days",
+                benefits: [
+                    "Low interest rate: 4.125%",
+                    "Up to 40-year repayment terms",
+                    "Down payment assistance up to $300,150",
+                    "Priority for beginning farmers"
+                ],
+                url: "https://www.fsa.usda.gov/programs-and-services/farm-loan-programs/farm-ownership-loans/"
+            },
+            {
+                id: 4,
+                name: "EQIP - Environmental Quality Incentives Program",
+                agency: "USDA NRCS",
+                maxAmount: "$450,000",
+                type: "Cost-share Grant",
+                interestRate: "N/A",
+                minExp: 0, maxExp: 50,
+                minAcres: 0, maxAcres: 5000,
+                states: ["SC", "NC", "GA"],
+                farmerTypes: ["beginning", "young", "small"],
+                purposes: ["irrigation", "conservation", "infrastructure", "equipment"],
+                deadline: "January 15, 2026",
+                appTime: "60-90 days",
+                benefits: [
+                    "Covers 50-75% of conservation costs",
+                    "Beginning farmers eligible for 75% rate",
+                    "Advance payments up to 50% available",
+                    "Technical assistance included"
+                ],
+                url: "https://www.nrcs.usda.gov/programs-initiatives/eqip-environmental-quality-incentives"
+            },
+            {
+                id: 5,
+                name: "Farmer Bridge Assistance Program",
+                agency: "USDA Farm Service Agency",
+                maxAmount: "Varies by acreage",
+                type: "Direct Payment",
+                interestRate: "N/A",
+                minExp: 0, maxExp: 50,
+                minAcres: 1, maxAcres: 10000,
+                states: ["SC", "NC", "GA"],
+                farmerTypes: ["beginning", "young", "small"],
+                purposes: ["operating", "disaster"],
+                deadline: "April 17, 2026",
+                appTime: "4-6 weeks",
+                benefits: [
+                    "Direct payments - no repayment",
+                    "Based on planted acres",
+                    "Helps offset high input costs",
+                    "Simple online enrollment"
+                ],
+                url: "https://www.farmers.gov/"
+            },
+            {
+                id: 6,
+                name: "South Carolina Agriculture Innovation Grant",
+                agency: "SC Department of Agriculture",
+                maxAmount: "$30,000",
+                type: "Grant",
+                interestRate: "N/A",
+                minExp: 0, maxExp: 15,
+                minAcres: 0, maxAcres: 500,
+                states: ["SC"],
+                farmerTypes: ["beginning", "young", "small"],
+                purposes: ["equipment", "infrastructure", "marketing"],
+                deadline: "February 2, 2026",
+                appTime: "60 days",
+                benefits: [
+                    "Up to $30,000 - no repayment",
+                    "Expert support included",
+                    "Business development assistance",
+                    "Networking opportunities"
+                ],
+                url: "https://scaginnovation.com/"
+            },
+            {
+                id: 7,
+                name: "Conservation Stewardship Program (CSP)",
+                agency: "USDA NRCS",
+                maxAmount: "$200,000 over 5 years",
+                type: "Annual Payment",
+                interestRate: "N/A",
+                minExp: 0, maxExp: 50,
+                minAcres: 10, maxAcres: 5000,
+                states: ["SC", "NC", "GA"],
+                farmerTypes: ["beginning", "young", "small"],
+                purposes: ["conservation", "soil_health", "water"],
+                deadline: "January 15, 2026",
+                appTime: "60-90 days",
+                benefits: [
+                    "Annual payments for 5 years (minimum $4,000/year)",
+                    "Rewards existing conservation efforts",
+                    "Technical assistance included",
+                    "Can stack with other USDA programs"
+                ],
+                url: "https://www.nrcs.usda.gov/programs-initiatives/csp-conservation-stewardship-program"
+            },
+            {
+                id: 8,
+                name: "Value-Added Producer Grant",
+                agency: "USDA Rural Development",
+                maxAmount: "$250,000",
+                type: "Grant",
+                interestRate: "N/A",
+                minExp: 0, maxExp: 50,
+                minAcres: 0, maxAcres: 10000,
+                states: ["SC", "NC", "GA"],
+                farmerTypes: ["beginning", "young", "small"],
+                purposes: ["processing", "marketing", "equipment"],
+                deadline: "Check USDA website",
+                appTime: "120-180 days",
+                benefits: [
+                    "Planning grants up to $75,000",
+                    "Working capital grants up to $250,000",
+                    "Priority for beginning farmers",
+                    "Helps create new revenue streams"
+                ],
+                url: "https://www.rd.usda.gov/programs-services/business-programs/value-added-producer-grants"
+            }
+        ];
+
+        // FILL EXAMPLE PROFILE
+        function fillExample() {
+            document.getElementById('farmName').value = 'Carter Family Farm';
+            document.getElementById('state').value = 'SC';
+            document.getElementById('acres').value = '250';
+            document.getElementById('experience').value = '6';
+            document.getElementById('young').checked = true;
+            document.getElementById('beginning').checked = true;
+            document.getElementById('small').checked = true;
+            document.getElementById('equipment').checked = true;
+            document.getElementById('operating').checked = true;
+        }
+
+        // SMART MATCHING ALGORITHM
+        function findMatches() {
+            const farmName = document.getElementById('farmName').value;
+            const state = document.getElementById('state').value;
+            const acres = parseInt(document.getElementById('acres').value) || 0;
+            const experience = parseInt(document.getElementById('experience').value) || 0;
+
+            if (!farmName || !state || !acres || !experience) {
+                alert('Please fill in all required fields!');
+                return;
+            }
+
+            // Get farmer types
+            const farmerTypes = [];
+            if (document.getElementById('young').checked) farmerTypes.push('young');
+            if (document.getElementById('beginning').checked) farmerTypes.push('beginning');
+            if (document.getElementById('small').checked) farmerTypes.push('small');
+
+            // Get purposes
+            const purposes = [];
+            if (document.getElementById('equipment').checked) purposes.push('equipment');
+            if (document.getElementById('operating').checked) purposes.push('operating');
+            if (document.getElementById('land').checked) purposes.push('land');
+            if (document.getElementById('irrigation').checked) purposes.push('irrigation');
+            if (document.getElementById('conservation').checked) purposes.push('conservation');
+
+            // CALCULATE MATCH SCORES
+            const matches = programs.map(program => {
+                let score = 0;
+                const reasons = [];
+
+                // 1. Experience Match (30 points)
+                if (experience >= program.minExp && experience <= program.maxExp) {
+                    score += 30;
+                    if (experience <= 10) {
+                        reasons.push(`✓ You qualify as a beginning farmer (${experience} years)`);
+                    } else {
+                        reasons.push(`✓ Your experience (${experience} years) qualifies`);
+                    }
+                }
+
+                // 2. Farm Size Match (20 points)
+                if (acres >= program.minAcres && acres <= program.maxAcres) {
+                    score += 20;
+                    if (acres <= 300) {
+                        reasons.push(`✓ Perfect for small-scale operations (${acres} acres)`);
+                    } else {
+                        reasons.push(`✓ Your farm size (${acres} acres) qualifies`);
+                    }
+                }
+
+                // 3. State Match (15 points)
+                if (program.states.includes(state)) {
+                    score += 15;
+                    reasons.push(`✓ Available in ${state}`);
+                }
+
+                // 4. Farmer Type Match (20 points)
+                const matchingTypes = farmerTypes.filter(t => program.farmerTypes.includes(t));
+                if (matchingTypes.length > 0) {
+                    score += matchingTypes.length * 7;
+                    reasons.push(`✓ Priority for ${matchingTypes.join(', ')} farmers`);
+                }
+
+                // 5. Purpose Match (25 points)
+                const matchingPurposes = purposes.filter(p => program.purposes.includes(p));
+                if (matchingPurposes.length > 0) {
+                    score += matchingPurposes.length * 8;
+                    reasons.push(`✓ Supports: ${matchingPurposes.join(', ')}`);
+                }
+
+                // 6. Grant Bonus (10 points)
+                if (program.type === 'Grant' || program.type === 'Direct Payment') {
+                    score += 10;
+                    reasons.push(`✓ ${program.type} - no repayment required`);
+                }
+
+                // 7. Fast Approval Bonus (5 points)
+                if (program.appTime.includes('2-3 weeks')) {
+                    score += 5;
+                    reasons.push(`⚡ Fast approval: ${program.appTime}`);
+                }
+
+                const matchPercentage = Math.min(Math.round((score / 100) * 100), 100);
+
+                return {
+                    ...program,
+                    score,
+                    matchPercentage,
+                    reasons
+                };
+            });
+
+            // Filter and sort
+            const filtered = matches.filter(m => m.score >= 30).sort((a, b) => b.score - a.score);
+
+            // Display results
+            displayResults(filtered, farmName, acres, experience, state, farmerTypes, purposes);
+        }
+
+        // DISPLAY RESULTS
+        function displayResults(matches, farmName, acres, experience, state, farmerTypes, purposes) {
+            document.getElementById('welcomeText').textContent = `Welcome, ${farmName}!`;
+            document.getElementById('profileSummary').textContent = 
+                `${acres} acres | ${experience} years experience | ${state} | ${farmerTypes.join(', ')} farmer`;
+
+            const container = document.getElementById('results');
+            container.innerHTML = '';
+
+            if (matches.length === 0) {
+                container.innerHTML = '<p>No matching programs found. Try adjusting your profile.</p>';
+            } else {
+                matches.forEach((program, index) => {
+                    const isFirst = index === 0;
+                    const card = document.createElement('div');
+                    card.className = isFirst ? 'best-pick' : 'program-card';
+
+                    card.innerHTML = `
+                        <div class="${isFirst ? 'badge' : 'match-badge'}">
+                            ${isFirst ? '🏆 BEST MATCH - ' : ''}${program.matchPercentage}% Match
+                        </div>
+                        <h3>${program.name}</h3>
+                        <div class="meta">
+                            <strong>${program.agency}</strong> | ${program.type} | Up to ${program.maxAmount}
+                        </div>
+                        ${program.interestRate !== 'N/A' ? `<p class="meta"><strong>Interest Rate:</strong> ${program.interestRate}</p>` : ''}
+                        <p class="meta"><strong>Deadline:</strong> ${program.deadline} | <strong>Application Time:</strong> ${program.appTime}</p>
+                        
+                        <div style="margin: 15px 0;">
+                            <strong>Why you match:</strong>
+                            <ul>
+                                ${program.reasons.map(r => `<li>${r}</li>`).join('')}
+                            </ul>
+                        </div>
+                        
+                        <div style="margin: 15px 0;">
+                            <strong>Key Benefits:</strong>
+                            <ul>
+                                ${program.benefits.map(b => `<li>${b}</li>`).join('')}
+                            </ul>
+                        </div>
+                        
+                        <a href="${program.url}" target="_blank">Visit Program Website →</a>
+                    `;
+
+                    container.appendChild(card);
+                });
+            }
+
+            document.getElementById('profile-section').classList.remove('active');
+            document.getElementById('results-section').classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        // GO BACK
+        function goBack() {
+            document.getElementById('profile-section').classList.add('active');
+            document.getElementById('results-section').classList.remove('active');
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>

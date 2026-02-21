@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match My Farm</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .box {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .btn-yellow {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .btn-blue {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-gray {
+            background: #e0e0e0;
+            color: #333;
+        }
+        
+        .hidden { display: none; }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .badge {
+            background: #4caf50;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        ul {
+            margin: 15px 0 15px 20px;
+            line-height: 1.8;
+        }
+        
+        a {
+            color: #667eea;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌱 Match My Farm</h1>
+        
+        <!-- FORM -->
+        <div id="form" class="box">
+            <h2>Your Farm Profile</h2>
+            
+            <label>Farm Name</label>
+            <input type="text" id="name" placeholder="Enter farm name">
+            
+            <label>State</label>
+            <select id="state">
+                <option value="">Select State</option>
+                <option value="SC">South Carolina</option>
+                <option value="NC">North Carolina</option>
+                <option value="GA">Georgia</option>
+            </select>
+            
+            <label>Farm Size (acres)</label>
+            <input type="number" id="acres" placeholder="250">
+            
+            <label>Years Experience</label>
+            <input type="number" id="exp" placeholder="6">
+            
+            <button class="btn-yellow" onclick="fillName()">Use Example Name</button>
+            <button class="btn-blue" onclick="findPrograms()">Find Programs</button>
+        </div>
+        
+        <!-- RESULTS -->
+        <div id="results" class="hidden"></div>
+    </div>
+
+    <script>
+        function fillName() {
+            document.getElementById('name').value = 'Carter Family Farm';
+        }
+        
+        function findPrograms() {
+            const name = document.getElementById('name').value;
+            const state = document.getElementById('state').value;
+            const acres = document.getElementById('acres').value;
+            const exp = document.getElementById('exp').value;
+            
+            if (!name || !state || !acres || !exp) {
+                alert('Please fill all fields!');
+                return;
+            }
+            
+            document.getElementById('form').classList.add('hidden');
+            
+            const results = document.getElementById('results');
+            results.classList.remove('hidden');
+            results.innerHTML = `
+                <div class="card">
+                    <span class="badge">🏆 95% Match</span>
+                    <h2>FSA Microloans</h2>
+                    <p><strong>USDA FSA | Loan | $50,000</strong></p>
+                    <p>Perfect for ${name}!</p>
+                    <ul>
+                        <li>Fast approval (2-3 weeks)</li>
+                        <li>Low interest: 3.375%</li>
+                        <li>Minimal paperwork</li>
+                    </ul>
+                    <a href="https://www.fsa.usda.gov/programs-and-services/farm-loan-programs/microloans/" target="_blank">Apply Now →</a>
+                </div>
+                
+                <div class="card">
+                    <span class="badge">90% Match</span>
+                    <h2>FSA Operating Loans</h2>
+                    <p><strong>USDA FSA | Loan | $400,000</strong></p>
+                    <ul>
+                        <li>For seed, fertilizer, equipment</li>
+                        <li>Beginning farmer priority</li>
+                        <li>Flexible repayment</li>
+                    </ul>
+                    <a href="https://www.fsa.usda.gov/programs-and-services/farm-loan-programs/farm-operating-loans/" target="_blank">Apply Now →</a>
+                </div>
+                
+                <div class="card">
+                    <span class="badge">85% Match</span>
+                    <h2>EQIP Conservation</h2>
+                    <p><strong>USDA NRCS | Grant | $450,000</strong></p>
+                    <ul>
+                        <li>50-75% cost-share</li>
+                        <li>For irrigation & conservation</li>
+                        <li>Deadline: Jan 15, 2026</li>
+                    </ul>
+                    <a href="https://www.nrcs.usda.gov/programs-initiatives/eqip-environmental-quality-incentives" target="_blank">Apply Now →</a>
+                </div>
+                
+                <div class="card">
+                    <span class="badge">80% Match</span>
+                    <h2>Farmer Bridge Assistance</h2>
+                    <p><strong>USDA FSA | Direct Payment | Varies</strong></p>
+                    <ul>
+                        <li>No repayment required</li>
+                        <li>Based on planted acres</li>
+                        <li>Deadline: Apr 17, 2026</li>
+                    </ul>
+                    <a href="https://www.farmers.gov/" target="_blank">Apply Now →</a>
+                </div>
+                
+                <button class="btn-gray" onclick="goBack()">← Back</button>
+            `;
+        }
+        
+        function goBack() {
+            document.getElementById('results').classList.add('hidden');
+            document.getElementById('form').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

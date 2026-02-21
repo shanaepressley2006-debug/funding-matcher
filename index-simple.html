@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farm Funding Matcher</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌾 Farm Funding Matcher</h1>
+            <p>Find funding programs that match your farm profile</p>
+        </header>
+
+        <div id="app">
+            <!-- Step 1: Profile -->
+            <section id="profile-section" class="section active">
+                <h2>Your Farm Profile</h2>
+                <div class="quick-start">
+                    <button type="button" id="use-example" class="btn-example">📋 Use Example Profile (Michael Carter - YBS Farmer)</button>
+                </div>
+                <form id="profile-form">
+                    <div class="form-group">
+                        <label>Farm Name</label>
+                        <input type="text" id="farm-name">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Location (County, State)</label>
+                        <input type="text" id="location" placeholder="e.g., Orangeburg County, SC">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Total Farm Size (acres)</label>
+                        <input type="number" id="farm-size">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Owned Land (acres) <span style="color: #999; font-size: 14px;">(optional)</span></label>
+                        <input type="number" id="owned-land" value="0">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Leased Land (acres) <span style="color: #999; font-size: 14px;">(optional)</span></label>
+                        <input type="number" id="leased-land" value="0">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Years of Farming Experience</label>
+                        <input type="number" id="experience">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Main Crop Types (select at least one)</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" id="crop-corn" value="corn"> Corn</label>
+                            <label><input type="checkbox" id="crop-soybeans" value="soybeans"> Soybeans</label>
+                            <label><input type="checkbox" id="crop-cotton" value="cotton"> Cotton</label>
+                            <label><input type="checkbox" id="crop-wheat" value="wheat"> Wheat/Small Grains</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Primary Funding Needs (select at least one)</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" id="need-equipment" value="equipment"> Equipment & Machinery</label>
+                            <label><input type="checkbox" id="need-operating" value="operating_costs"> Operating Costs (seed, fertilizer, etc.)</label>
+                            <label><input type="checkbox" id="need-land-purchase" value="land_purchase"> Land Purchase/Lease</label>
+                            <label><input type="checkbox" id="need-irrigation" value="irrigation"> Irrigation Systems</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Off-Farm Employment Status</label>
+                        <select id="employment">
+                            <option value="full-time">Full-time off-farm job</option>
+                            <option value="part-time">Part-time off-farm job</option>
+                            <option value="none">No off-farm employment</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Farmer Status</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" id="young-farmer"> Young Farmer (under 35)</label>
+                            <label><input type="checkbox" id="beginning-farmer"> Beginning Farmer (≤10 years)</label>
+                            <label><input type="checkbox" id="small-farmer"> Small Farmer (YBS - ≤$250k revenue)</label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Find My Funding Programs →</button>
+                </form>
+            </section>
+
+            <!-- Step 2: Results -->
+            <section id="results-section" class="section">
+                <h2>Matching Funding Programs</h2>
+                <div id="results-container"></div>
+                <button type="button" id="back-btn" class="btn-secondary">Edit Profile</button>
+            </section>
+
+            <!-- Step 3: Program Details -->
+            <section id="details-section" class="section">
+                <div id="program-details"></div>
+                <button type="button" id="back-to-results" class="btn-secondary">Back to Results</button>
+            </section>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="simple-app.js"></script>
+</body>
+</html>

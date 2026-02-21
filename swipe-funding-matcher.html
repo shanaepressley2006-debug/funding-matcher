@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match My Farm</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* PROFILE FORM */
+        .profile-box {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #555;
+            font-size: 13px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            font-weight: normal;
+            font-size: 12px;
+        }
+
+        .checkbox-group input {
+            width: auto;
+            margin-right: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+            margin-top: 15px;
+        }
+
+        .btn-example {
+            background: #ffc107;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        /* SWIPE CARDS */
+        .swipe-container {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            margin-bottom: 20px;
+        }
+
+        .card-stack {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .funding-card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 30px;
+            cursor: grab;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .funding-card:active {
+            cursor: grabbing;
+        }
+
+        .funding-card.swiping {
+            transition: none;
+        }
+
+        .funding-card.swipe-right {
+            transform: translateX(150%) rotate(20deg);
+            opacity: 0;
+        }
+
+        .funding-card.swipe-left {
+            transform: translateX(-150%) rotate(-20deg);
+            opacity: 0;
+        }
+
+        .match-badge {
+            background: #4caf50;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            color: #667eea;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .card-meta {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .card-section {
+            margin: 15px 0;
+        }
+
+        .card-section h4 {
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .card-section ul {
+            margin-left: 20px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* SWIPE INDICATORS */
+        .swipe-indicator {
+            position: absolute;
+            top: 50px;
+            font-size: 80px;
+            font-weight: bold;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .swipe-indicator.left {
+            left: 50px;
+            color: #ff4444;
+        }
+
+        .swipe-indicator.right {
+            right: 50px;
+            color: #4caf50;
+        }
+
+        .swipe-indicator.show {
+            opacity: 0.8;
+        }
+
+        /* ACTION BUTTONS */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: none;
+            font-size: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .action-btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn-skip {
+            background: #ff4444;
+            color: white;
+        }
+
+        .btn-save {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-info {
+            background: #2196f3;
+            color: white;
+            font-size: 20px;
+        }
+
+        /* NO MORE CARDS */
+        .no-cards {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .no-cards h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        /* SAVED PROGRAMS */
+        .saved-list {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .saved-item {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #4caf50;
+        }
+
+        .saved-item h3 {
+            color: #667eea;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .saved-item p {
+            color: #666;
+            font-size: 13px;
+            margin: 5px 0;
+        }
+
+        .saved-item a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .counter {
+            text-align: center;
+            color: white;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 0 10px;
+            }
+            
+            .swipe-container {
+                height: 500px;
+            }
+            
+            .funding-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌱 Match My Farm</h1>
+        <p class="subtitle">Swipe right to save, left to skip</p>
+
+        <!-- PROFILE SECTION -->
+        <div id="profile-section" class="section active">
+            <div class="profile-box">
+                <button class="btn-example" onclick="fillExample()">
+                    📋 Use Example Profile
+                </button>
+
+                <div class="form-group">
+                    <label>Farm Name</label>
+                    <input type="text" id="farmName">
+                </div>
+
+                <div class="form-group">
+                    <label>State</label>
+                    <select id="state">
+                        <option value="">Select</option>
+                        <option value="SC">South Carolina</option>
+                        <option value="NC">North Carolina</option>
+                        <option value="GA">Georgia</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Farm Size (acres)</label>
+                    <input type="number" id="acres">
+                </div>
+
+                <div class="form-group">
+                    <label>Years Experience</label>
+                    <input type="number" id="experience">
+                </div>
+
+                <div class="form-group">
+                    <label>Farmer Status</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" id="young"> Young</label>
+                        <label><input type="checkbox" id="beginning"> Beginning</label>
+                        <label><input type="checkbox" id="small"> Small</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Funding Needs</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" id="equipment"> Equipment</label>
+                        <label><input type="checkbox" id="operating"> Operating</label>
+                        <label><input type="checkbox" id="land"> Land</label>
+                        <label><input type="checkbox" id="irrigation"> Irrigation</label>
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="startSwiping()">
+                    Start Swiping →
+                </button>
+            </div>
+        </div>
+
+        <!-- SWIPE SECTION -->
+        <div id="swipe-section" class="section">
+            <div class="counter">
+                <span id="current-card">1</span> / <span id="total-cards">0</span> programs
+            </div>
+
+            <div class="swipe-container">
+                <div class="swipe-indicator left">✗</div>
+                <div class="swipe-indicator right">♥</div>
+                <div id="card-stack" class="card-stack"></div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="action-btn btn-skip" onclick="swipeLeft()">✗</button>
+                <button class="action-btn btn-info" onclick="showInfo()">i</button>
+                <button class="action-btn btn-save" onclick="swipeRight()">♥</button>
+            </div>
+
+            <button class="btn-secondary" onclick="viewSaved()">
+                View Saved Programs (<span id="saved-count">0</span>)
+            </button>
+        </div>
+
+        <!-- SAVED SECTION -->
+        <div id="saved-section" class="section">
+            <div class="saved-list">
+                <h2 style="color: #667eea; margin-bottom: 20px;">💚 Saved Programs</h2>
+                <div id="saved-container"></div>
+            </div>
+            <button class="btn-secondary" onclick="backToSwipe()">← Back to Swiping</button>
+            <button class="btn-primary" onclick="restart()">Start Over</button>
+        </div>
+    </div>
+
+    <script>
+        // PROGRAMS DATABASE
+        const programs = [
+            {
+                id: 1,
+                name: "FSA Microloans",
+                agency: "USDA FSA",
+                maxAmount: "$50,000",
+                type: "Loan",
+                rate: "3.375%",
+                minExp: 0, maxExp: 10,
+                minAcres: 0, maxAcres: 300,
+                states: ["SC", "NC", "GA"],
+                farmerTypes: ["beginning", "young", "small"],
+                purposes: ["equipment", "operating"],
+                deadline: "Year-round",
+                appTime: "2-3 weeks",
+                benefits: ["Fast approval", "Low interest", "Minimal paperwork"],
+                url: "https://www.fsa.usda.gov/programs-and-services/farm-loan-programs/microloans/"
+            },
+            {
+                id: 2,
+                name: "FSA Operating Loans",
+                agency: "USDA FSA",
+                maxAmount: "$400,000",
+                type: "Loan",
+                rate: "3.375%",
+                minExp: 0, maxExp: 10,
+                minAcres: 0, maxAcres: 1000,
+                states: ["SC", "NC", "GA"],
+                farmerTypes: ["beginning", "young", "small"],
+                purposes: ["operating", "equipment"],
+                deadline: "Year-round",
+                appTime: "30-45 days",
+                benefits: ["Flexible repayment", "Beginning farmer priority", "Can refinance debt"],
+                url: "https://www.fsa.usda.gov/programs-and-services/farm-loan-programs/farm-operating-loans/"
+            },
+            {
+                id: 3,
+                name: "Farm Ownership Loans",
+                agency: "USDA FSA",
+                maxAmount: "$600,000",
+                type: "Loan",
+                rate: "4.125%",
+                minExp: 0, maxExp: 10,
+                minAcres: 0, maxAcres: 2000,
+                states: ["SC", "NC", "GA"],
+                farmerTypes: ["beginning", "young", "small"],
+                purposes: ["land", "equipment"],
+                deadline: "Year-round",
+                appTime: "30-60 days",
+                benefits: ["40-year terms", "Down payment assistance", "Low interest"],
+                url: "https://www.fsa.usda.gov/programs-and-services/farm-loan-programs/farm-ownership-loans/"
+            },
+            {
+                id: 4,
+                name: "EQIP Conservation",
+                agency: "USDA NRCS",
+                maxAmount: "$450,000",
+                type: "Cost-share Grant",
+                rate: "N/A",
+                minExp: 0, maxExp: 50,
+                minAcres: 0, maxAcres: 5000,
+                states: ["SC", "NC", "GA"],
+                farmerTypes: ["beginning", "young", "small"],
+                purposes: ["irrigation", "conservation", "equipment"],
+                deadline: "Jan 15, 2026",
+                appTime: "60-90 days",
+                benefits: ["50-75% cost-share", "Technical assistance", "Advance payments"],
+                url: "https://www.nrcs.usda.gov/programs-initiatives/eqip-environmental-quality-incentives"
+            },
+            {
+                id: 5,
+                name: "Farmer Bridge Assistance",
+                agency: "USDA FSA",
+                maxAmount: "Varies",
+                type: "Direct Payment",
+                rate: "N/A",
+                minExp: 0, maxExp: 50,
+                minAcres: 1, maxAcres: 10000,
+                states: ["SC", "NC", "GA"],
+                farmerTypes: ["beginning", "young", "small"],
+                purposes: ["operating"],
+                deadline: "Apr 17, 2026",
+                appTime: "4-6 weeks",
+                benefits: ["No repayment", "Based on acres", "Simple enrollment"],
+                url: "https://www.farmers.gov/"
+            },
+            {
+                id: 6,
+                name: "SC Innovation Grant",
+                agency: "SC Dept of Agriculture",
+                maxAmount: "$30,000",
+                type: "Grant",
+                rate: "N/A",
+                minExp: 0, maxExp: 15,
+                minAcres: 0, maxAcres: 500,
+                states: ["SC"],
+                farmerTypes: ["beginning", "young", "small"],
+                purposes: ["equipment", "marketing"],
+                deadline: "Feb 2, 2026",
+                appTime: "60 days",
+                benefits: ["No repayment", "Expert support", "Networking"],
+                url: "https://scaginnovation.com/"
+            },
+            {
+                id: 7,
+                name: "Conservation Stewardship",
+                agency: "USDA NRCS",
+                maxAmount: "$200,000",
+                type: "Annual Payment",
+                rate: "N/A",
+                minExp: 0, maxExp: 50,
+                minAcres: 10, maxAcres: 5000,
+                states: ["SC", "NC", "GA"],
+                farmerTypes: ["beginning", "young", "small"],
+                purposes: ["conservation"],
+                deadline: "Jan 15, 2026",
+                appTime: "60-90 days",
+                benefits: ["$4,000+/year for 5 years", "Rewards conservation", "Can stack with other programs"],
+                url: "https://www.nrcs.usda.gov/programs-initiatives/csp-conservation-stewardship-program"
+            },
+            {
+                id: 8,
+                name: "Value-Added Producer",
+                agency: "USDA Rural Development",
+                maxAmount: "$250,000",
+                type: "Grant",
+                rate: "N/A",
+                minExp: 0, maxExp: 50,
+                minAcres: 0, maxAcres: 10000,
+                states: ["SC", "NC", "GA"],
+                farmerTypes: ["beginning", "young", "small"],
+                purposes: ["processing", "marketing"],
+                deadline: "Check website",
+                appTime: "120-180 days",
+                benefits: ["Planning grants $75k", "Working capital $250k", "Priority for beginning farmers"],
+                url: "https://www.rd.usda.gov/programs-services/business-programs/value-added-producer-grants"
+            }
+        ];
+
+        let currentMatches = [];
+        let currentIndex = 0;
+        let savedPrograms = [];
+        let isDragging = false;
+        let startX = 0;
+        let currentX = 0;
+
+        function fillExample() {
+            document.getElementById('farmName').value = 'Carter Family Farm';
+        }
+
+        function startSwiping() {
+            const state = document.getElementById('state').value;
+            const acres = parseInt(document.getElementById('acres').value) || 0;
+            const experience = parseInt(document.getElementById('experience').value) || 0;
+
+            if (!state || !acres || !experience) {
+                alert('Please fill in all required fields!');
+                return;
+            }
+
+            const farmerTypes = [];
+            if (document.getElementById('young').checked) farmerTypes.push('young');
+            if (document.getElementById('beginning').checked) farmerTypes.push('beginning');
+            if (document.getElementById('small').checked) farmerTypes.push('small');
+
+            const purposes = [];
+            if (document.getElementById('equipment').checked) purposes.push('equipment');
+            if (document.getElementById('operating').checked) purposes.push('operating');
+            if (document.getElementById('land').checked) purposes.push('land');
+            if (document.getElementById('irrigation').checked) purposes.push('irrigation');
+
+            // Calculate matches
+            currentMatches = programs.filter(p => {
+                return experience >= p.minExp && experience <= p.maxExp &&
+                       acres >= p.minAcres && acres <= p.maxAcres &&
+                       p.states.includes(state);
+            }).map(p => {
+                let score = 0;
+                if (farmerTypes.some(t => p.farmerTypes.includes(t))) score += 30;
+                if (purposes.some(pur => p.purposes.includes(pur))) score += 30;
+                if (p.type === 'Grant' || p.type === 'Direct Payment') score += 20;
+                return { ...p, score };
+            }).sort((a, b) => b.score - a.score);
+
+            if (currentMatches.length === 0) {
+                alert('No matching programs found!');
+                return;
+            }
+
+            currentIndex = 0;
+            savedPrograms = [];
+            document.getElementById('total-cards').textContent = currentMatches.length;
+            document.getElementById('saved-count').textContent = '0';
+            
+            renderCards();
+            document.getElementById('profile-section').classList.remove('active');
+            document.getElementById('swipe-section').classList.add('active');
+        }
+
+        function renderCards() {
+            const stack = document.getElementById('card-stack');
+            stack.innerHTML = '';
+
+            // Render next 3 cards
+            for (let i = currentIndex; i < Math.min(currentIndex + 3, currentMatches.length); i++) {
+                const program = currentMatches[i];
+                const card = createCard(program, i);
+                stack.appendChild(card);
+            }
+
+            updateCounter();
+            
+            if (currentIndex < currentMatches.length) {
+                setupSwipe();
+            }
+        }
+
+        function createCard(program, index) {
+            const card = document.createElement('div');
+            card.className = 'funding-card';
+            card.style.zIndex = 100 - index;
+            
+            const matchPercent = Math.min(Math.round((program.score / 80) * 100), 100);
+            
+            card.innerHTML = `
+                <div class="match-badge">${matchPercent}% Match</div>
+                <h2 class="card-title">${program.name}</h2>
+                <div class="card-meta">
+                    ${program.agency} | ${program.type} | ${program.maxAmount}
+                </div>
+                ${program.rate !== 'N/A' ? `<p style="color: #666; margin: 10px 0;"><strong>Rate:</strong> ${program.rate}</p>` : ''}
+                <p style="color: #666; margin: 10px 0;"><strong>Deadline:</strong> ${program.deadline}</p>
+                <p style="color: #666; margin: 10px 0;"><strong>Application:</strong> ${program.appTime}</p>
+                
+                <div class="card-section">
+                    <h4>Key Benefits:</h4>
+                    <ul>
+                        ${program.benefits.map(b => `<li>${b}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <a href="${program.url}" target="_blank" style="color: #667eea; text-decoration: none; font-weight: 600;">
+                        Learn More →
+                    </a>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        function setupSwipe() {
+            const card = document.querySelector('.funding-card');
+            if (!card) return;
+
+            card.addEventListener('mousedown', startDrag);
+            card.addEventListener('touchstart', startDrag);
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('touchmove', drag);
+            document.addEventListener('mouseup', endDrag);
+            document.addEventListener('touchend', endDrag);
+        }
+
+        function startDrag(e) {
+            isDragging = true;
+            startX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
+            const card = e.currentTarget;
+            card.classList.add('swiping');
+        }
+
+        function drag(e) {
+            if (!isDragging) return;
+            
+            currentX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
+            const diff = currentX - startX;
+            const card = document.querySelector('.funding-card.swiping');
+            
+            if (card) {
+                const rotation = diff / 20;
+                card.style.transform = `translateX(${diff}px) rotate(${rotation}deg)`;
+                
+                // Show indicators
+                const leftIndicator = document.querySelector('.swipe-indicator.left');
+                const rightIndicator = document.querySelector('.swipe-indicator.right');
+                
+                if (diff < -50) {
+                    leftIndicator.classList.add('show');
+                    rightIndicator.classList.remove('show');
+                } else if (diff > 50) {
+                    rightIndicator.classList.add('show');
+                    leftIndicator.classList.remove('show');
+                } else {
+                    leftIndicator.classList.remove('show');
+                    rightIndicator.classList.remove('show');
+                }
+            }
+        }
+
+        function endDrag() {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            const diff = currentX - startX;
+            const card = document.querySelector('.funding-card.swiping');
+            
+            if (card) {
+                card.classList.remove('swiping');
+                
+                if (diff > 100) {
+                    swipeRight();
+                } else if (diff < -100) {
+                    swipeLeft();
+                } else {
+                    card.style.transform = '';
+                }
+            }
+            
+            document.querySelector('.swipe-indicator.left').classList.remove('show');
+            document.querySelector('.swipe-indicator.right').classList.remove('show');
+        }
+
+        function swipeRight() {
+            const card = document.querySelector('.funding-card');
+            if (!card) return;
+            
+            card.classList.add('swipe-right');
+            savedPrograms.push(currentMatches[currentIndex]);
+            document.getElementById('saved-count').textContent = savedPrograms.length;
+            
+            setTimeout(() => {
+                currentIndex++;
+                if (currentIndex >= currentMatches.length) {
+                    showComplete();
+                } else {
+                    renderCards();
+                }
+            }, 300);
+        }
+
+        function swipeLeft() {
+            const card = document.querySelector('.funding-card');
+            if (!card) return;
+            
+            card.classList.add('swipe-left');
+            
+            setTimeout(() => {
+                currentIndex++;
+                if (currentIndex >= currentMatches.length) {
+                    showComplete();
+                } else {
+                    renderCards();
+                }
+            }, 300);
+        }
+
+        function showInfo() {
+            const program = currentMatches[currentIndex];
+            window.open(program.url, '_blank');
+        }
+
+        function updateCounter() {
+            document.getElementById('current-card').textContent = currentIndex + 1;
+        }
+
+        function showComplete() {
+            const stack = document.getElementById('card-stack');
+            stack.innerHTML = `
+                <div class="no-cards">
+                    <h2>🎉 All Done!</h2>
+                    <p style="color: #666; margin: 20px 0;">You've reviewed all ${currentMatches.length} programs</p>
+                    <p style="color: #666;">Saved: ${savedPrograms.length} programs</p>
+                </div>
+            `;
+        }
+
+        function viewSaved() {
+            const container = document.getElementById('saved-container');
+            container.innerHTML = '';
+            
+            if (savedPrograms.length === 0) {
+                container.innerHTML = '<p style="color: #666; text-align: center;">No saved programs yet. Swipe right to save!</p>';
+            } else {
+                savedPrograms.forEach(program => {
+                    const item = document.createElement('div');
+                    item.className = 'saved-item';
+                    item.innerHTML = `
+                        <h3>${program.name}</h3>
+                        <p><strong>${program.agency}</strong> | ${program.type} | ${program.maxAmount}</p>
+                        <p><strong>Deadline:</strong> ${program.deadline}</p>
+                        <a href="${program.url}" target="_blank">Apply Now →</a>
+                    `;
+                    container.appendChild(item);
+                });
+            }
+            
+            document.getElementById('swipe-section').classList.remove('active');
+            document.getElementById('saved-section').classList.add('active');
+        }
+
+        function backToSwipe() {
+            document.getElementById('saved-section').classList.remove('active');
+            document.getElementById('swipe-section').classList.add('active');
+        }
+
+        function restart() {
+            document.getElementById('saved-section').classList.remove('active');
+            document.getElementById('profile-section').classList.add('active');
+        }
+    </script>
+</body>
+</html>

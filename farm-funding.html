@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Farm Funding Matcher</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .big-button {
+            background: #ffc107;
+            color: #333;
+            padding: 20px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 20px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .big-button:hover {
+            background: #ffb300;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .big-button:active {
+            transform: translateY(0);
+        }
+        .submit-button {
+            background: #667eea;
+            color: white;
+        }
+        .submit-button:hover {
+            background: #5568d3;
+        }
+        .back-button {
+            background: #e0e0e0;
+            color: #333;
+            font-size: 16px;
+            padding: 15px 30px;
+        }
+        .back-button:hover {
+            background: #d0d0d0;
+        }
+        input {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0 20px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            color: #333;
+            margin-top: 15px;
+        }
+        .program-card {
+            background: #f9f9f9;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+        .program-card h3 {
+            color: #667eea;
+            margin-top: 0;
+        }
+        .best-pick {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        .best-pick h3 {
+            color: white;
+            margin-top: 0;
+        }
+        .badge {
+            background: #ffc107;
+            color: #333;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        ul {
+            line-height: 1.8;
+        }
+        .hidden {
+            display: none;
+        }
+        .instruction {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196f3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- STEP 1: FORM -->
+        <div id="step1">
+            <h1>🌾 Farm Funding Matcher</h1>
+            <p class="subtitle">Find USDA funding programs for your farm</p>
+            
+            <div class="instruction">
+                <strong>👇 CLICK THE YELLOW BUTTON BELOW to auto-fill the form</strong>
+            </div>
+            
+            <button class="big-button" onclick="fillForm()">
+                📋 CLICK HERE - Fill Example Profile (Michael Carter)
+            </button>
+            
+            <label>Farm Name:</label>
+            <input type="text" id="farmName" placeholder="Enter your farm name">
+            
+            <label>Location (County, State):</label>
+            <input type="text" id="location" placeholder="e.g., Orangeburg County, SC">
+            
+            <label>Farm Size (acres):</label>
+            <input type="number" id="farmSize" placeholder="250">
+            
+            <label>Years of Farming Experience:</label>
+            <input type="number" id="experience" placeholder="6">
+            
+            <button class="big-button submit-button" onclick="showResults()">
+                🔍 CLICK HERE - Find My Funding Programs
+            </button>
+        </div>
+        
+        <!-- STEP 2: RESULTS -->
+        <div id="step2" class="hidden">
+            <h1>🎯 Your Matching Programs</h1>
+            <p class="subtitle">Based on your farm profile</p>
+            
+            <div class="best-pick">
+                <div class="badge">🏆 BEST PICK FOR YOU</div>
+                <h3>FSA Microloans for Beginning Farmers</h3>
+                <p><strong>USDA Farm Service Agency | Loan | Up to $50,000</strong></p>
+                <p>Simplified loan program designed specifically for small and beginning farmers. Features streamlined application with less paperwork and faster approval.</p>
+                <p><strong>Why this is your best option:</strong></p>
+                <ul>
+                    <li>✓ You qualify as a beginning farmer</li>
+                    <li>✓ Simplified application - minimal paperwork</li>
+                    <li>✓ Fast approval (2-3 weeks)</li>
+                    <li>✓ Low interest rate: 3.375%</li>
+                    <li>✓ Perfect for farmers with off-farm employment</li>
+                </ul>
+                <a href="https://www.fsa.usda.gov/programs-and-services/farm-loan-programs/microloans/" target="_blank" style="text-decoration: none;">
+                    <button class="big-button" style="background: white; color: #667eea;">
+                        Visit Program Website →
+                    </button>
+                </a>
+            </div>
+            
+            <h2 style="margin-top: 40px;">Other Matching Programs</h2>
+            
+            <div class="program-card">
+                <h3>FSA Direct Operating Loans</h3>
+                <p><strong>USDA Farm Service Agency | Loan | Up to $400,000</strong></p>
+                <p>Annual operating loans for seed, fertilizer, chemicals, and equipment. Beginning farmers receive priority consideration.</p>
+                <p><strong>Benefits:</strong></p>
+                <ul>
+                    <li>Low interest rate: 3.375%</li>
+                    <li>Flexible repayment based on harvest</li>
+                    <li>Beginning farmer priority</li>
+                </ul>
+                <a href="https://www.fsa.usda.gov/programs-and-services/farm-loan-programs/farm-operating-loans/" target="_blank">
+                    <button class="big-button submit-button">Learn More →</button>
+                </a>
+            </div>
+            
+            <div class="program-card">
+                <h3>EQIP - Environmental Quality Incentives Program</h3>
+                <p><strong>USDA NRCS | Cost-share Grant | Up to $450,000</strong></p>
+                <p>Covers 50-75% of conservation practice costs including irrigation systems. Beginning farmers get 75% cost-share rate.</p>
+                <p><strong>Deadline:</strong> January 15, 2026</p>
+                <a href="https://www.nrcs.usda.gov/programs-initiatives/eqip-environmental-quality-incentives" target="_blank">
+                    <button class="big-button submit-button">Learn More →</button>
+                </a>
+            </div>
+            
+            <div class="program-card">
+                <h3>Farmer Bridge Assistance Program</h3>
+                <p><strong>USDA FSA | Direct Payment | Varies by acreage</strong></p>
+                <p>One-time direct payments to row crop producers. $11 billion allocated for 2026.</p>
+                <p><strong>Enrollment:</strong> February 23 - April 17, 2026</p>
+                <a href="https://www.fsa.usda.gov/" target="_blank">
+                    <button class="big-button submit-button">Learn More →</button>
+                </a>
+            </div>
+            
+            <button class="big-button back-button" onclick="goBack()">
+                ← Back to Edit Profile
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function fillForm() {
+            document.getElementById('farmName').value = 'Carter Family Farm';
+            document.getElementById('location').value = 'Orangeburg County, SC';
+            document.getElementById('farmSize').value = '250';
+            document.getElementById('experience').value = '6';
+            alert('✅ Form filled! Now scroll down and click the blue "Find My Funding Programs" button');
+        }
+        
+        function showResults() {
+            var farmName = document.getElementById('farmName').value;
+            var location = document.getElementById('location').value;
+            var farmSize = document.getElementById('farmSize').value;
+            var experience = document.getElementById('experience').value;
+            
+            if (!farmName || !location || !farmSize || !experience) {
+                alert('⚠️ Please fill in all fields first!\n\nClick the yellow button to auto-fill, or enter your information manually.');
+                return;
+            }
+            
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+        
+        function goBack() {
+            document.getElementById('step1').classList.remove('hidden');
+            document.getElementById('step2').classList.add('hidden');
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>
