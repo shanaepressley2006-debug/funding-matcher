@@ -1,0 +1,41 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                    DEPLOYMENT SCRIPTS COMPARISON                          ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║                                                                           ║
+║  QUICK DEPLOY (quick-deploy.sh)          AUTOMATED (deploy-to-aws.sh)   ║
+║  ═══════════════════════════════          ═══════════════════════════    ║
+║                                                                           ║
+║  Prerequisites:                           Prerequisites:                 ║
+║  • Git                                    • Git                          ║
+║  • GitHub account                         • AWS CLI (configured)         ║
+║  • AWS account                            • GitHub CLI (authenticated)   ║
+║                                           • GitHub personal token        ║
+║                                                                           ║
+║  Process:                                 Process:                       ║
+║  • Semi-automated                         • Fully automated              ║
+║  • Opens browser                          • Command-line only            ║
+║  • Manual AWS Console steps               • No manual steps              ║
+║                                                                           ║
+║  Time:                                    Time:                          ║
+║  • ~10 minutes                            • ~5-10 minutes                ║
+║                                                                           ║
+║  Best for:                                Best for:                      ║
+║  • Beginners                              • Advanced users               ║
+║  • First-time deployment                  • Repeat deployments           ║
+║  • Visual learners                        • CI/CD pipelines              ║
+║  • Those without CLI tools                • Automation enthusiasts       ║
+║                                                                           ║
+║  Features:                                Features:                      ║
+║  ✓ Step-by-step guide                     ✓ Zero manual steps            ║
+║  ✓ Auto JWT generation                    ✓ Auto JWT generation          ║
+║  ✓ Git push automation                    ✓ Full AWS integration         ║
+║  ✓ Browser integration                    ✓ Deployment monitoring        ║
+║  ✓ Clear instructions                     ✓ Live URL output              ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+USAGE:
+  Quick:     ./quick-deploy.sh
+  Automated: ./deploy-to-aws.sh
+
+DOCUMENTATION: See DEPLOYMENT_SCRIPTS.md for full details
