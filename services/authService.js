@@ -64,7 +64,7 @@ const verifyJWT = (req, res, next) => {
 /**
  * Register a new user
  * @param {object} userData - User registration data
- * @returns {Promise<object>} Success message or error
+ * @returns {Promise<object>} Token and user profile (without password)
  */
 const register = async (userData) => {
   const { email, password, acres, experience, state, farmerType, purposes } = userData;
@@ -101,7 +101,16 @@ const register = async (userData) => {
   // Add user to store
   profileStore.addUser(user);
   
-  return { message: 'Registered successfully' };
+  // Generate JWT token (auto-login after registration)
+  const token = generateJWT(user.id);
+  
+  // Return sanitized user profile (exclude password) and token
+  const { password: _, ...userWithoutPassword } = user;
+  
+  return {
+    token,
+    user: userWithoutPassword
+  };
 };
 
 /**
@@ -145,4 +154,3 @@ module.exports = {
   register,
   login
 };
-

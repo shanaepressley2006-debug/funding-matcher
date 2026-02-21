@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farm Funding Matcher</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌱 Farm Funding Matcher</h1>
+            <p>Find funding programs that match your farm profile</p>
+        </header>
+
+        <!-- LOGIN/REGISTER SECTION -->
+        <div id="auth-section" class="section active">
+            <div class="auth-container">
+                <div class="auth-box">
+                    <h2>Register</h2>
+                    <form id="register-form">
+                        <input type="email" id="reg-email" placeholder="Email" required>
+                        <input type="password" id="reg-password" placeholder="Password" required>
+                        <input type="number" id="reg-acres" placeholder="Farm Size (acres)" required>
+                        <input type="number" id="reg-experience" placeholder="Years Experience" required>
+                        <select id="reg-state" required>
+                            <option value="">Select State</option>
+                            <option value="SC">South Carolina</option>
+                            <option value="NC">North Carolina</option>
+                            <option value="GA">Georgia</option>
+                        </select>
+                        
+                        <label style="font-size: 14px; margin-top: 10px;">Farmer Status:</label>
+                        <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px;">
+                            <label style="display: flex; align-items: center; font-weight: normal;">
+                                <input type="checkbox" id="reg-young" value="young" style="width: auto; margin-right: 8px;">
+                                Young Farmer (under 35)
+                            </label>
+                            <label style="display: flex; align-items: center; font-weight: normal;">
+                                <input type="checkbox" id="reg-beginning" value="beginning" style="width: auto; margin-right: 8px;">
+                                Beginning Farmer (≤10 years)
+                            </label>
+                            <label style="display: flex; align-items: center; font-weight: normal;">
+                                <input type="checkbox" id="reg-small" value="small" style="width: auto; margin-right: 8px;">
+                                Small Farmer (YBS)
+                            </label>
+                        </div>
+                        
+                        <label style="font-size: 14px;">Funding Needs:</label>
+                        <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px;">
+                            <label style="display: flex; align-items: center; font-weight: normal;">
+                                <input type="checkbox" id="reg-equipment" value="equipment" style="width: auto; margin-right: 8px;">
+                                Equipment
+                            </label>
+                            <label style="display: flex; align-items: center; font-weight: normal;">
+                                <input type="checkbox" id="reg-operating" value="operating_costs" style="width: auto; margin-right: 8px;">
+                                Operating Costs
+                            </label>
+                            <label style="display: flex; align-items: center; font-weight: normal;">
+                                <input type="checkbox" id="reg-land" value="land_purchase" style="width: auto; margin-right: 8px;">
+                                Land Purchase
+                            </label>
+                            <label style="display: flex; align-items: center; font-weight: normal;">
+                                <input type="checkbox" id="reg-irrigation" value="irrigation" style="width: auto; margin-right: 8px;">
+                                Irrigation
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary">Register</button>
+                    </form>
+                </div>
+
+                <div class="auth-box">
+                    <h2>Login</h2>
+                    <form id="login-form">
+                        <input type="email" id="login-email" placeholder="Email" required>
+                        <input type="password" id="login-password" placeholder="Password" required>
+                        <button type="submit" class="btn-primary">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- MATCHES SECTION -->
+        <div id="matches-section" class="section">
+            <div class="user-info">
+                <h3>Welcome, <span id="user-email"></span>!</h3>
+                <p>Farm: <span id="user-acres"></span> acres | Experience: <span id="user-experience"></span> years | State: <span id="user-state"></span></p>
+                <button class="btn-secondary" onclick="logout()">Logout</button>
+            </div>
+
+            <h2>Your Matching Programs</h2>
+            <div id="matches-container"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
